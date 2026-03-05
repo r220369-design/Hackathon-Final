@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Users, FileText, BellRing, AlertTriangle, TrendingUp, TrendingDown, Minus, MapPin } from 'lucide-react';
+import { Users, FileText, BellRing, AlertTriangle, TrendingUp, TrendingDown, Minus, MapPin, Activity } from 'lucide-react';
 import api from '../api';
 
 const Dashboard = () => {
