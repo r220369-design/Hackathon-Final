@@ -1,0 +1,100 @@
+{
+    "welcome": "Welcome to Ayushseva AI",
+    "tagline": "First sign detected, a life saved.",
+    "register": "Register",
+    "login": "Login",
+    "email": "Email Address",
+    "password": "Password",
+    "phone": "Phone Number",
+    "age": "Age",
+
+    "villageCode": "Village Code",
+    "language": "Language",
+    "symptoms": "Tell us your symptoms...",
+    "analyze": "Analyze Symptoms",
+    "analyzing": "Analyzing...",
+    "riskScore": "Risk Score",
+    "diseases": "Possible Conditions",
+    "recommendation": "Recommendation",
+    "hospitals": "Nearest Hospitals",
+    "dashboard": {
+        "title": "Dashboard",
+        "greeting": "Hello!",
+        "noContact": "No contact details",
+        "notAvailable": "N/A",
+
+        "healthAssistant": "Health Assistant",
+        "startHealthCheck": "Start Health Check",
+        "startHealthCheckHint": "Describe symptoms and get instant AI triage",
+        "uploadReport": "Upload Report",
+        "medicalReports": "Medical Reports",
+        "nearbyHospitals": "Nearby Hospitals",
+        "myReminders": "My Reminders",
+        "myAlerts": "My Alerts",
+        "logout": "Logout",
+        "currentReportRiskScore": "Current Report Risk Score",
+        "fromLatestReport": "From your latest medical report",
+        "trend": {
+            "improving": "Improving",
+            "worsening": "Worsening",
+            "stable": "Stable"
+        },
+        "errors": {
+            "loadAll": "Failed to load dashboard updates",
+            "loadReminders": "Reminders could not be loaded right now",
+            "loadHistory": "Medical history could not be loaded right now"
+        }
+    },
+    "officerDashboard": "Officer Dashboard",
+    "familyGroup": "Family Group",
+
+    "babyVaccination": "Baby Vaccination",
+    "landing": {
+        "badge": "AI-Powered Rural Health Support",
+        "heroLine1": "Better Health Decisions,",
+        "heroLine2": "Faster Care for Every Family.",
+        "heroDescription": "Ayushseva AI helps villagers, families, and officers detect health risks early, coordinate care, and follow treatment through reminders, alerts, and actionable insights.",
+        "featuresTitle": "Everything your community needs in one platform",
+        "howItWorksTitle": "How it works",
+        "ctaTitle": "Start using Ayushseva AI today",
+        "ctaDescription": "Register now to access AI health triage, reminders, family coordination, and community-level support.",
+        "registerNow": "Register Now",
+        "features": {
+            "triage": {
+                "title": "AI Symptom Triage",
+                "description": "Enter symptoms in simple language and get risk level, guidance, and nearby hospital suggestions."
+            },
+            "family": {
+                "title": "Family Health Groups",
+                "description": "Create or join family groups so members can stay informed and act quickly during contagious risks."
+            },
+
+            "reminders": {
+                "title": "Smart Reminders & Alerts",
+                "description": "Get timely in-app reminders for follow-ups, checkups, and vaccine due dates."
+            },
+            "officer": {
+                "title": "Officer Monitoring",
+                "description": "Village officers get dashboards and patient-level insights to support high-risk cases faster."
+            },
+            "reports": {
+                "title": "Medical Report Analysis",
+                "description": "Upload medical reports and receive easy-to-understand AI summaries and recommendations."
+            }
+        },
+        "steps": {
+            "step1": {
+                "title": "1. Register & Set Profile",
+                "description": "Create your account with village details, language, and health context."
+            },
+            "step2": {
+                "title": "2. Use AI + Track Care",
+                "description": "Analyze symptoms, upload reports, and track family and reminders."
+            },
+            "step3": {
+                "title": "3. Act Early & Stay Safe",
+                "description": "Get alerts, follow recommendations, and connect with care quickly for high-risk cases."
+            }
+        }
+    }
+}

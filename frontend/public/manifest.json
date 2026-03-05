@@ -1,0 +1,15 @@
+{
+    "name": "Ayushseva AI",
+    "short_name": "Ayushseva AI",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#1B5E20",
+    "theme_color": "#1B5E20",
+    "icons": [
+        {
+            "src": "/ayushseva-icon.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml"
+        }
+    ]
+}

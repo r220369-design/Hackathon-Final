@@ -1,0 +1,265 @@
+Grameen Swastha AI - Backend Routes & Usage
+Date: 2026-03-04
+
+Base URL
+- Local: http://localhost:5000
+- Health/Test route: GET /
+
+Authentication
+- Most routes are protected.
+- Send JWT token in header:
+  Authorization: Bearer <token>
+- Get token from:
+  POST /api/auth/register or POST /api/auth/login
+
+==================================================
+1) AUTH ROUTES (/api/auth)
+==================================================
+
+POST /api/auth/register
+- Public
+- Body (JSON):
+  {
+    "name": "Rishi",
+    "email": "rishi@example.com",
+    "password": "123456",
+    "phone": "9999999999",
+    "role": "user",            // optional: user/officer
+    "language": "te",          // optional
+    "age": 28,
+    "isPregnant": false,
+    "villageCode": "AP-01",
+    "notificationPreference": "inapp"
+  }
+- Returns: user details + token
+
+POST /api/auth/login
+- Public
+- Body (JSON):
+  {
+    "email": "rishi@example.com",
+    "password": "123456"
+  }
+- Returns: user details + token
+
+POST /api/auth/login/sms/request
+- Public
+- Body (JSON):
+  {
+    "phone": "9999999999"
+  }
+- Sends OTP to registered user phone number (role=user)
+
+POST /api/auth/login/sms/verify
+- Public
+- Body (JSON):
+  {
+    "phone": "9999999999",
+    "otp": "123456"
+  }
+- Returns: user details + token
+
+GET /api/auth/profile
+- Private
+- Header: Authorization: Bearer <token>
+- Returns: logged-in user profile
+
+==================================================
+2) TRIAGE ROUTES (/api/triage)
+==================================================
+
+POST /api/triage/analyze
+- Private
+- Body (JSON):
+  {
+    "symptomText": "fever and cough since 2 days",
+    "language": "en",
+    "location": { "lat": 17.385, "lng": 78.4867 }
+  }
+- Returns: risk score, level, recommendation, nearby hospitals, reportId
+
+GET /api/triage/hospitals?lat=17.385&lng=78.4867&limit=5
+- Private
+- Returns: nearby hospital list
+
+GET /api/triage/history?limit=20
+- Private
+- Returns: user's medical history records (latest first), average score, and trend
+
+==================================================
+3) FAMILY ROUTES (/api/family)
+==================================================
+
+POST /api/family/create
+- Private
+- Creates a family group for current user
+
+POST /api/family/join
+- Private
+- Body (JSON):
+  { "groupCode": "AP-01-FAM-1234" }
+
+GET /api/family/me
+- Private
+- Returns current user family group data
+
+POST /api/family/members
+- Private
+- Body (JSON) using one identifier:
+  { "email": "member@example.com" }
+  OR
+  { "phone": "8888888888" }
+
+POST /api/family/leave
+- Private
+- Current user leaves family group
+
+==================================================
+4) OFFICER ROUTES (/api/officer)
+==================================================
+(Requires user role = officer)
+
+GET /api/officer/dashboard
+- Private + Officer
+- Returns village dashboard (users, reports, alerts, risk buckets)
+
+GET /api/officer/patients
+- Private + Officer
+- Returns village patients list
+
+==================================================
+5) REPORT ROUTES (/api/reports)
+==================================================
+
+POST /api/reports/upload
+- Private
+- multipart/form-data
+- Field name must be: report
+- Max file size: 10 MB
+- Table-aware extraction enabled for: PDF, CSV/TXT, XLS/XLSX, DOCX
+- Lab table rows are parsed and included in AI scoring/summary
+- Returns: AI summary + reportId
+
+==================================================
+6) PREGNANCY ROUTES (/api/pregnancy)
+==================================================
+
+GET /api/pregnancy/me
+- Private
+- Returns pregnancy profile
+
+POST /api/pregnancy/upsert
+- Private
+- Body (JSON):
+  {
+    "dueDate": "2026-08-15",
+    "notes": ["first visit done"]
+  }
+
+POST /api/pregnancy/checkup
+- Private
+- Body (JSON):
+  {
+    "month": 4,
+    "doctorNotes": "BP normal",
+    "riskLevel": "Moderate",
+    "recommendations": "continue supplements"
+  }
+
+POST /api/pregnancy/baby
+- Private
+- Body (JSON):
+  {
+    "name": "Baby A",
+    "dob": "2026-01-10"
+  }
+
+PATCH /api/pregnancy/baby/:babyIndex/vaccination/:vaccinationIndex
+- Private
+- Example: PATCH /api/pregnancy/baby/0/vaccination/1
+- Marks selected vaccination as completed
+
+==================================================
+7) ALERT ROUTES (/api/alerts)
+==================================================
+
+GET /api/alerts/me
+- Private
+- Returns alerts for logged-in user
+
+PATCH /api/alerts/:id/read
+- Private
+- Marks alert as read
+
+==================================================
+8) REMINDER ROUTES (/api/reminders)
+==================================================
+
+GET /api/reminders/me
+- Private
+- Returns reminders for logged-in user
+
+POST /api/reminders/dispatch
+- Private + Officer
+- Triggers sending due reminders
+
+Auto reminder scheduling behavior
+- On successful POST /api/triage/analyze (medical symptom input), follow-up reminders are auto-created.
+- Reminders are scheduled in hours/days based on risk level and ask user to update current condition.
+- Reminder dispatcher in server runs hourly and sends any due pending reminders.
+
+==================================================
+Quick curl Examples
+==================================================
+
+1) Register
+curl -X POST http://localhost:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"Rishi\",\"email\":\"rishi@example.com\",\"password\":\"123456\",\"age\":28,\"villageCode\":\"AP-01\"}"
+
+2) Login
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d "{\"email\":\"rishi@example.com\",\"password\":\"123456\"}"
+
+3) Use token for protected route
+curl -X GET http://localhost:5000/api/auth/profile \
+  -H "Authorization: Bearer <TOKEN>"
+
+4) Analyze symptoms
+curl -X POST http://localhost:5000/api/triage/analyze \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -d "{\"symptomText\":\"fever\",\"language\":\"en\"}"
+
+5) Upload report file (Windows path example)
+curl -X POST http://localhost:5000/api/reports/upload \
+  -H "Authorization: Bearer <TOKEN>" \
+  -F "report=@C:/path/to/report.pdf"
+
+Notes
+- Officer-only endpoints fail with 401 if role is not officer.
+- Protected endpoints fail with 401 if token is missing/invalid.
+
+==================================================
+SMS OTP Setup (Twilio)
+==================================================
+
+1) Install backend dependencies
+- npm install
+
+2) Add these variables in backend/.env
+- TWILIO_ACCOUNT_SID=your_twilio_account_sid
+- TWILIO_AUTH_TOKEN=your_twilio_auth_token
+- TWILIO_FROM_NUMBER=your_twilio_phone_number_in_e164_format
+
+3) Restart backend server after updating .env
+
+4) Create a user with phone number and role=user
+
+5) Test OTP request
+curl -X POST http://localhost:5000/api/auth/login/sms/request \
+  -H "Content-Type: application/json" \
+  -d "{\"phone\":\"9999999999\"}"
+
+6) If no Twilio env is set, notification service runs in mock mode and logs OTP in backend console.
