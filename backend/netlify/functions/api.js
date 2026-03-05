@@ -81,5 +81,36 @@ app.get('/', (req, res) => {
     res.send('Grameen Swastha AI API is running...');
 });
 
-// Export handler for Netlify
-module.exports.handler = serverless(app);
+// Create serverless handler
+const serverlessHandler = serverless(app);
+
+// Export handler with manual CORS headers for Netlify
+module.exports.handler = async (event, context) => {
+    // Handle preflight OPTIONS request
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, Accept, Origin',
+                'Access-Control-Max-Age': '86400',
+            },
+            body: '',
+        };
+    }
+
+    // Call the serverless handler
+    const response = await serverlessHandler(event, context);
+
+    // Add CORS headers to response
+    return {
+        ...response,
+        headers: {
+            ...response.headers,
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, Accept, Origin',
+        },
+    };
+};
