@@ -25,17 +25,27 @@ const allowedOrigins = [
 
 // Middleware
 app.use(express.json());
-app.use(cors({
+
+// CORS configuration
+const corsOptions = {
     origin: function(origin, callback) {
         // Allow requests with no origin (like mobile apps or curl)
         if (!origin) return callback(null, true);
         if (allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
-        return callback(null, false);
+        // Allow all origins in production for now
+        return callback(null, true);
     },
-    credentials: true
-}));
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests for all routes
+app.options('*', cors(corsOptions));
 
 // Route files
 const authRoutes = require('../../routes/authRoutes');

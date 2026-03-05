@@ -7,6 +7,13 @@
   node_bundler = "esbuild"
   included_files = ["config/**", "controllers/**", "middleware/**", "models/**", "routes/**", "services/**", "utils/**"]
 
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization, X-Requested-With, Accept, Origin"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/api/:splat"
