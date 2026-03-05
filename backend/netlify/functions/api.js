@@ -12,10 +12,28 @@ connectDB();
 
 const app = express();
 
+// Allowed origins for CORS
+const allowedOrigins = [
+    'https://hackathon-final-ten.vercel.app',
+    'https://hackathon-final-omv8m4mgj-r220369-designs-projects.vercel.app',
+    'https://hackathon-final-git-main-r220369-designs-projects.vercel.app',
+    process.env.CLIENT_URL,
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175'
+].filter(Boolean);
+
 // Middleware
 app.use(express.json());
 app.use(cors({
-    origin: process.env.CLIENT_URL || '*',
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(null, false);
+    },
     credentials: true
 }));
 
