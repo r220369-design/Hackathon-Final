@@ -48,6 +48,11 @@ app.get('/', (req, res) => {
     res.send('Grameen Swastha AI API is running...');
 });
 
+// Health check for Railway
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
