@@ -1,0 +1,18 @@
+[build]
+  command = "npm install"
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  included_files = ["config/**", "controllers/**", "middleware/**", "models/**", "routes/**", "services/**", "utils/**"]
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/"
+  to = "/.netlify/functions/api"
+  status = 200
